@@ -11,7 +11,7 @@ const RiskGauge = ({ riskLevel }) => {
         startColor="green"
         endColor="red"
         segments={10}
-        currentValueText={`ความเสี่ยงระดับ: ${riskLevel || 0}`}
+        currentValueText={`ระดับความเสี่ยง: ${riskLevel || 0}`}
         width={300}
         height={200}
       />

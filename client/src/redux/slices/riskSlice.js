@@ -1,10 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  position: 0,
   silicaDust: 0,
   workingHours: 0,
   underlyingDiseases: 0,
   residenceSeparation: 0,
+  name: "",
+  surname: "",
   riskLevel: null,
 };
 
