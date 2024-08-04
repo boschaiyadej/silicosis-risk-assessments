@@ -1,81 +1,48 @@
+import { Link } from "react-router-dom";
+import { GrUserWorker } from "react-icons/gr";
+import { PiGauge } from "react-icons/pi";
+import { FaHelmetSafety } from "react-icons/fa6";
+
 const HomePage = () => {
   return (
-    <div className="p-8 font-sarabun bg-base-200 text-base-content">
-      <h1 className="text-4xl font-kanit text-primary mb-4">
-        Welcome to Silicosis Risk Assessments
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <h1 className="text-2xl font-bold mb-6 text-center">
+        Web Application
+        <br />
+        ประเมินความเสี่ยง
+        <br />
+        ผู้ประกอบอาชีพแกะสลักหิน
+        <br />
+        อ.สีคิ้ว จ.นครราชสีมา
       </h1>
-      <p className="text-lg text-neutral-content mb-6">
-        This application helps assess the risk levels of silicosis. The
-        following sections will guide you through different risk levels and
-        their respective actions.
-      </p>
-      <div className="mb-6">
-        <h2 className="text-2xl font-kanit text-risk-level-0-content mb-2">
-          Risk Level 0
-        </h2>
-        <p className="text-base mb-4">
-          No immediate action needed. Regular monitoring is recommended.
-        </p>
-        <div className="p-4 bg-risk-level-0 text-risk-level-0-content rounded shadow-md">
-          Risk Level 0 Area
-        </div>
+      <div className="flex flex-col space-y-4 w-full max-w-xs">
+        <Link
+          to="/risk-assessment"
+          className="flex items-center gap-2 bg-warning text-warning-content text-start py-3 px-6 rounded-lg shadow-md hover:bg-warning-light focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50 transition"
+        >
+          <PiGauge className="text-xl" /> ประเมินความเสี่ยงโรคปอดฝุ่นหินทราย
+        </Link>
+        <Link
+          to="/register-worker"
+          className="flex items-center gap-2 bg-primary text-primary-content text-start py-3 px-6 rounded-lg shadow-md hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition"
+        >
+          <GrUserWorker className="text-xl" />
+          ลงทะเบียนผู้ประกอบอาชีพแกะสลักหิน
+        </Link>
+
+        <Link
+          to="/risk-info"
+          className="flex items-center gap-2 bg-accent text-accent-content text-start py-3 px-6 rounded-lg shadow-md hover:bg-accent-light focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 transition"
+        >
+          <FaHelmetSafety />
+          ข้อมูลอาชีวอนามัยและความปลอดภัย
+        </Link>
       </div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-kanit text-risk-level-1-content mb-2">
-          Risk Level 1
-        </h2>
-        <p className="text-base mb-4">
-          Very low risk. Continue regular monitoring.
-        </p>
-        <div className="p-4 bg-risk-level-1 text-risk-level-1-content rounded shadow-md">
-          Risk Level 1 Area
-        </div>
-      </div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-kanit text-risk-level-2-content mb-2">
-          Risk Level 2
-        </h2>
-        <p className="text-base mb-4">
-          Low risk. Periodic monitoring is recommended.
-        </p>
-        <div className="p-4 bg-risk-level-2 text-risk-level-2-content rounded shadow-md">
-          Risk Level 2 Area
-        </div>
-      </div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-kanit text-risk-level-3-content mb-2">
-          Risk Level 3
-        </h2>
-        <p className="text-base mb-4">
-          Moderate risk. Consider implementing control measures.
-        </p>
-        <div className="p-4 bg-risk-level-3 text-risk-level-3-content rounded shadow-md">
-          Risk Level 3 Area
-        </div>
-      </div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-kanit text-risk-level-4-content mb-2">
-          Risk Level 4
-        </h2>
-        <p className="text-base mb-4">
-          High risk. Immediate control measures are needed.
-        </p>
-        <div className="p-4 bg-risk-level-4 text-risk-level-4-content rounded shadow-md">
-          Risk Level 4 Area
-        </div>
-      </div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-kanit text-risk-level-5-content mb-2">
-          Risk Level 5
-        </h2>
-        <p className="text-base mb-4">
-          Extreme risk. Critical intervention required to prevent health
-          hazards.
-        </p>
-        <div className="p-4 bg-risk-level-5 text-risk-level-5-content rounded shadow-md">
-          Risk Level 5 Area
-        </div>
-      </div>
+      <h1 className="text-md mt-6 text-start">
+        จัดทำโดย มหาวิทยาลัยธรรมศาสตร์
+        <br />
+        สนับสนุนโดย สสส.
+      </h1>
     </div>
   );
 };
