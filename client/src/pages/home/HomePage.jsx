@@ -17,7 +17,7 @@ const HomePage = () => {
       </h1>
       <div className="flex flex-col space-y-4 w-full max-w-xs">
         <Link
-          to="/risk-assessment"
+          to="/risk-assessments"
           className="flex items-center gap-2 bg-warning text-warning-content text-start py-3 px-6 rounded-lg shadow-md hover:bg-warning-light focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50 transition"
         >
           <PiGauge className="text-xl" /> ประเมินความเสี่ยงโรคปอดฝุ่นหินทราย
