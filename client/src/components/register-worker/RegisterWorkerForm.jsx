@@ -1,10 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import {
-  setRiskLevel,
-  calculateRiskLevel,
-  resetRiskLevel,
-} from "../../redux/slices/riskSlice";
+import { setRiskLevel, calculateRiskLevel } from "../../redux/slices/riskSlice";
 import {
   FormControl,
   FormLabel,
