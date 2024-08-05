@@ -18,11 +18,7 @@ import {
   TabPanels,
   TabPanel,
 } from "@chakra-ui/react";
-import {
-  diseaseOptions,
-  separationOptions,
-  positionOptions,
-} from "./RiskAssessmentsOption";
+import { diseaseOptions, separationOptions, positionOptions } from "../Option";
 import RiskResult from "./RiskResult";
 import { Link } from "react-router-dom";
 
@@ -197,7 +193,7 @@ function RiskAssessmentsForm() {
                 id="residence-separation"
                 isInvalid={hasSubmitted && !formValues.residenceSeparation}
               >
-                <FormLabel>ที่ตั้งที่พักอาศัย</FormLabel>
+                <FormLabel>ลักษณะสถานที่ทำงาน</FormLabel>
                 <Select
                   name="residenceSeparation"
                   value={formValues.residenceSeparation || ""}
@@ -211,7 +207,7 @@ function RiskAssessmentsForm() {
                 </Select>
                 {hasSubmitted && !formValues.residenceSeparation && (
                   <FormErrorMessage>
-                    กรุณาเลือกที่ตั้งที่พักอาศัย
+                    กรุณาเลือกลักษณะสถานที่ทำงาน
                   </FormErrorMessage>
                 )}
               </FormControl>
@@ -240,7 +236,7 @@ function RiskAssessmentsForm() {
             <button
               type="button"
               onClick={toggleNameFields}
-              className="bg-accent text-accent-content px-4 py-2 rounded hover:bg-accent"
+              className="bg-accent text-accent-content px-4 py-2 rounded hover:bg-accent-light"
             >
               {showNameFields ? "ยกเลิก" : "บันทึกผลการประเมิน"}
             </button>
@@ -254,24 +250,30 @@ function RiskAssessmentsForm() {
           </div>
           {showNameFields ? (
             <Stack spacing={4} className="mt-4">
-              <FormControl id="name">
+              <FormControl id="firstName">
                 <FormLabel>ชื่อ</FormLabel>
                 <Input
                   type="text"
-                  value={formValues.name || ""}
+                  value={formValues.firstName || ""}
                   onChange={handleChange}
                   placeholder="ชื่อผู้ได้รับการประเมิน"
                 />
+                {hasSubmitted && !formValues.firstName && (
+                  <FormErrorMessage>กรุณากรอกชื่อ</FormErrorMessage>
+                )}
               </FormControl>
 
-              <FormControl id="surname">
+              <FormControl id="lastName">
                 <FormLabel>นามสกุล</FormLabel>
                 <Input
                   type="text"
-                  value={formValues.surname || ""}
+                  value={formValues.lastName || ""}
                   onChange={handleChange}
                   placeholder="นามสกุลผู้ได้รับการประเมิน"
-                />
+                />{" "}
+                {hasSubmitted && !formValues.lastName && (
+                  <FormErrorMessage>กรุณากรอกนามสกุล</FormErrorMessage>
+                )}
               </FormControl>
 
               <button
