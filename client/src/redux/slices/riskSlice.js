@@ -6,8 +6,7 @@ const initialState = {
   workingHours: 0,
   underlyingDiseases: 0,
   residenceSeparation: 0,
-  name: "",
-  surname: "",
+  riskScore: 0,
   riskLevel: null,
 };
 
@@ -19,6 +18,9 @@ const riskSlice = createSlice({
       const { name, value } = action.payload;
       state[name] = parseFloat(value) || 0;
     },
+    setRiskScore(state, action) {
+      state.riskScore = parseFloat(action.payload) || 0;
+    },
     calculateRiskLevel(state) {
       const {
         silicaDust,
@@ -27,16 +29,17 @@ const riskSlice = createSlice({
         residenceSeparation,
       } = state;
 
-      const RiskScore =
+      const riskScore =
         silicaDust * 326.599 +
         workingHours * 0.733 -
         (underlyingDiseases === 2 ? 2.947 : 0) +
         (residenceSeparation === 2 ? 1.414 : 0);
 
-      const validRisk = Number.isNaN(RiskScore)
+      const validRisk = Number.isNaN(riskScore)
         ? 0
-        : Math.max(0, Math.min(5, (RiskScore / 25) * 5));
+        : Math.max(0, Math.min(5, (riskScore / 25) * 5));
 
+      state.riskScore = parseFloat(riskScore.toFixed(2));
       state.riskLevel = parseFloat(validRisk.toFixed(1));
     },
     resetRiskLevel(state) {
@@ -45,7 +48,11 @@ const riskSlice = createSlice({
   },
 });
 
-export const { setRiskLevel, calculateRiskLevel, resetRiskLevel } =
-  riskSlice.actions;
+export const {
+  setRiskScore,
+  setRiskLevel,
+  calculateRiskLevel,
+  resetRiskLevel,
+} = riskSlice.actions;
 
 export default riskSlice.reducer;
