@@ -39,6 +39,7 @@ function RiskAssessmentsForm() {
   const [lastName, setLastName] = useState("");
   const [isNameFieldsModalOpen, setIsNameFieldsModalOpen] = useState(false);
   const [isNameNotFound, setIsNameNotFound] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const riskLevel = useSelector((state) => state.risk.riskLevel);
   const riskScore = useSelector((state) => state.risk.riskScore);
@@ -150,6 +151,8 @@ function RiskAssessmentsForm() {
       lastName,
     };
 
+    setIsSubmit(true);
+
     try {
       const response = await axios.post(API_CREATE_RISK, data);
       setIsNameFieldsModalOpen(false);
@@ -159,6 +162,7 @@ function RiskAssessmentsForm() {
     } catch {
       setIsNameNotFound(true);
     }
+    setIsSubmit(false);
   };
 
   const closeNameFieldsModal = () => {
@@ -292,7 +296,7 @@ function RiskAssessmentsForm() {
 
                 <button
                   type="submit"
-                  className={`bg-accent mt-4 text-accent-content px-4 py-2 rounded hover:bg-accent-light disabled:bg-gray-300`}
+                  className={`bg-success mt-4 text-success-content px-4 py-2 rounded hover:bg-success-light disabled:bg-gray-300`}
                   disabled={!canSubmit()}
                 >
                   ประเมินความเสี่ยงโรคปอดฝุ่นหินทราย
@@ -300,7 +304,7 @@ function RiskAssessmentsForm() {
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="bg-error text-error-content px-4 py-2 rounded hover:bg-error-light"
+                  className="bg-info text-info-content px-4 py-2 rounded hover:bg-info-light"
                 >
                   ล้างข้อมูล
                 </button>
@@ -314,14 +318,14 @@ function RiskAssessmentsForm() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="bg-error text-error-content px-4 py-2 rounded hover:bg-error-light"
+                className="bg-info text-info-content px-4 py-2 rounded hover:bg-info-light"
               >
                 ประเมินอีกครั้ง
               </button>
               <button
                 type="button"
                 onClick={toggleNameModals}
-                className="bg-accent text-accent-content px-4 py-2 rounded hover:bg-accent-light"
+                className="bg-success text-success-content px-4 py-2 rounded hover:bg-success-light"
               >
                 บันทึกผลการประเมิน
               </button>
@@ -339,6 +343,7 @@ function RiskAssessmentsForm() {
         lastName={lastName}
         onChange={handleChange}
         isNameNotFound={isNameNotFound}
+        isSubmit={isSubmit}
       />
     </>
   );
