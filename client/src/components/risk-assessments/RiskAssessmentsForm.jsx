@@ -28,23 +28,27 @@ const API_CREATE_RISK = "http://localhost:5000/api/risk/";
 
 function RiskAssessmentsForm() {
   const dispatch = useDispatch();
+  const riskLevel = useSelector((state) => state.risk.riskLevel);
+  const riskScore = useSelector((state) => state.risk.riskScore);
+
+  const navigate = useNavigate();
+
+  const [tabIndex, setTabIndex] = useState(0);
+  const [isSubmit, setIsSubmit] = useState(false);
+
+  // risk assessments
   const [position, setPosition] = useState(0);
   const [silicaDust, setSilicaDust] = useState();
   const [workingHours, setWorkingHours] = useState();
   const [underlyingDiseases, setUnderlyingDiseases] = useState(0);
   const [residenceSeparation, setResidenceSeparation] = useState(0);
   const [invalidData, setInvalidData] = useState(false);
-  const [tabIndex, setTabIndex] = useState(0);
+
+  // save risk data
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isNameFieldsModalOpen, setIsNameFieldsModalOpen] = useState(false);
   const [isNameNotFound, setIsNameNotFound] = useState(false);
-  const [isSubmit, setIsSubmit] = useState(false);
-
-  const riskLevel = useSelector((state) => state.risk.riskLevel);
-  const riskScore = useSelector((state) => state.risk.riskScore);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const selectedPosition = positionOptions.find(
