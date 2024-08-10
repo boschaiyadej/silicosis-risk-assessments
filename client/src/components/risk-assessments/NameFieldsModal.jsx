@@ -20,6 +20,7 @@ const NameFieldsModal = ({
   lastName,
   onChange,
   isNameNotFound,
+  isSubmit,
 }) => {
   const canSubmit = () => {
     return firstName && lastName;
@@ -67,7 +68,7 @@ const NameFieldsModal = ({
               <Link to="/register-worker">
                 <button
                   type="button"
-                  className="bg-primary text-primary-content px-4 py-2 rounded hover:bg-primary-light"
+                  className="bg-secondary text-secondary-content px-4 py-2 rounded hover:bg-secondary-light"
                 >
                   ลงทะเบียน
                 </button>
@@ -78,9 +79,11 @@ const NameFieldsModal = ({
               type="button"
               onClick={onConfirm}
               disabled={!canSubmit()}
-              className="bg-accent text-accent-content px-4 py-2 rounded hover:bg-accent-light"
+              className={`${
+                !isSubmit ? "bg-success" : "bg-gray-300"
+              } text-success-content px-4 py-2 rounded hover:bg-success-light disabled:bg-gray-300`}
             >
-              บันทึกผล
+              {!isSubmit ? "บันทึกผล" : "กำลังบันทึกผล..."}
             </button>
             <button
               type="button"

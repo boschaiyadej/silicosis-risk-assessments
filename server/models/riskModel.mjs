@@ -1,26 +1,37 @@
 import mongoose from "mongoose";
 
-const riskSchema = new mongoose.Schema(
+const riskDataSchema = new mongoose.Schema(
   {
-    worker: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Worker",
-      required: true,
-    },
     position: { type: String, required: true },
     silicaDust: { type: Number, required: true },
-    workingHours: { type: Number, required: true },
-    underlyingDiseases: { type: String },
-    residenceSeparation: { type: String, required: true },
     riskScore: { type: Number, required: true },
-    riskLevel: { type: Number, required: true },
+    riskLevel: { type: String, required: true },
+    assessedAt: { type: Date, required: true },
   },
-  {
-    collection: "risk_data",
-    timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },
-  }
+  { _id: false }
 );
 
-const Risk = mongoose.model("Risk", riskSchema, "risk_data");
+const workerSchema = new mongoose.Schema({
+  gender: String,
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  age: Number,
+  idNumber: String,
+  nation: String,
+  workingHours: Number,
+  workingWeeks: Number,
+  workingYears: Number,
+  workAddress: String,
+  residenceSeparation: String,
+  bodyWeight: Number,
+  bodyHeight: Number,
+  bmi: String,
+  underlyingDiseases: Number,
+  riskData: [riskDataSchema],
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
 
-export default Risk;
+const Worker = mongoose.models.Worker || mongoose.model("Worker", workerSchema);
+
+export default Worker;
