@@ -1,49 +1,49 @@
 import { Link } from "react-router-dom";
 import { GrUserWorker } from "react-icons/gr";
 import { PiGauge } from "react-icons/pi";
-import { FaHelmetSafety } from "react-icons/fa6";
+import { TbInfoTriangleFilled } from "react-icons/tb";
+import Navbar from "../../components/navbar/Navbar";
 
 const HomePage = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h1 className="text-2xl font-bold mb-6 text-center">
-        Web Application
-        <br />
-        ประเมินความเสี่ยง
-        <br />
-        ผู้ประกอบอาชีพแกะสลักหิน
-        <br />
-        อ.สีคิ้ว จ.นครราชสีมา
-      </h1>
-      <div className="flex flex-col space-y-4 w-full max-w-xs">
-        <Link
-          to="/risk-assessments"
-          className="flex items-center gap-2 bg-primary text-primary-content text-start py-3 px-6 rounded-lg shadow-md hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50 transition"
-        >
-          <PiGauge className="text-xl" /> ประเมินความเสี่ยงโรคปอดฝุ่นหินทราย
-        </Link>
-        <Link
-          to="/register-worker"
-          className="flex items-center gap-2 bg-secondary text-secondary-content text-start py-3 px-6 rounded-lg shadow-md hover:bg-secondary-light focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50 transition"
-        >
-          <GrUserWorker className="text-xl" />
-          ลงทะเบียนผู้ประกอบอาชีพแกะสลักหิน
-        </Link>
+    <section className="flex flex-col min-h-screen">
+      <Navbar iconBack={false} />
+      <main className="flex-1 bg-white p-6 max-w-[1440px] mx-auto">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight md:leading-snug">
+              Web Application <br className="sm:hidden" /> ประเมินความเสี่ยง
+              <br />
+              ผู้ประกอบอาชีพแกะสลักหิน
+            </h1>
+          </div>
 
-        <Link
-          to="/risk-info"
-          className="flex items-center gap-2 bg-accent text-accent-content text-start py-3 px-6 rounded-lg shadow-md hover:bg-accent-light focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 transition"
-        >
-          <FaHelmetSafety />
-          ข้อมูลอาชีวอนามัยและความปลอดภัย
-        </Link>
-      </div>
-      <h1 className="text-md mt-6 text-start">
-        จัดทำโดย มหาวิทยาลัยธรรมศาสตร์
-        <br />
-        สนับสนุนโดย สสส.
-      </h1>
-    </div>
+          <div className="flex flex-col md:flex-row justify-around items-center gap-6">
+            <Link
+              to="/risk-assessments"
+              className="flex items-center gap-4 bg-primary text-primary-content md:text-lg py-4 px-6 md:py-4 md:px-8 rounded-lg shadow-lg hover:bg-primary-dark transition duration-300"
+            >
+              <PiGauge className="text-xl md:text-5xl" />
+              ประเมินความเสี่ยงโรคปอดฝุ่นหินทราย
+            </Link>
+            <Link
+              to="/register-worker"
+              className="flex items-center gap-4 bg-secondary text-secondary-content md:text-lg py-4 px-6 md:py-4 md:px-8 rounded-lg shadow-lg hover:bg-secondary-dark transition duration-300"
+            >
+              <GrUserWorker className="text-xl md:text-5xl" />
+              ลงทะเบียนผู้ประกอบอาชีพแกะสลักหิน
+            </Link>
+            <Link
+              to="/risk-info"
+              className="flex items-center gap-4 bg-warning text-warning-content md:text-lg py-4 px-6 md:py-4 md:px-8 rounded-lg shadow-lg hover:bg-warning-dark transition duration-300"
+            >
+              <TbInfoTriangleFilled className="text-xl md:text-5xl" />
+              ข้อมูลอาชีวอนามัยและความปลอดภัย
+            </Link>
+          </div>
+        </div>
+      </main>
+    </section>
   );
 };
 

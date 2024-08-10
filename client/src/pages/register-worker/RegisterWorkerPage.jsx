@@ -1,19 +1,16 @@
-import { Link } from "react-router-dom";
-import { IoChevronBack } from "react-icons/io5";
 import RegisterWorkerForm from "../../components/register-worker/RegisterWorkerForm";
+import Navbar from "../../components/navbar/Navbar";
 
 const RegisterWorkerPage = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start p-4">
-      <div className="w-full max-w-md p-4 rounded-lg">
-        <Link to="/">
-          <button className="text-primary-content  absolute top-2 left-1">
-            <IoChevronBack className="text-3xl" />
-          </button>
-        </Link>
-        <RegisterWorkerForm />
+    <section className="flex flex-col min-h-screen">
+      <Navbar iconBack={true} iconBackLink="/" />
+      <div className="min-h-screen flex flex-col items-center justify-start p-4 mt">
+        <div className="w-full max-w-md p-4 rounded-lg">
+          <RegisterWorkerForm />
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
