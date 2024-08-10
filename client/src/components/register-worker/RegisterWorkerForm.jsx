@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   setRiskLevel,
   calculateRiskLevel,
@@ -183,8 +184,9 @@ function RegisterWorkerForm() {
     );
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
     dispatch(setRiskLevel({ name: "position", value: position }));
     dispatch(setRiskLevel({ name: "silicaDust", value: silicaDust }));
     dispatch(setRiskLevel({ name: "workingHours", value: workingHours }));
@@ -199,8 +201,6 @@ function RegisterWorkerForm() {
     );
     dispatch(calculateRiskLevel());
 
-    navigate("/risk-result");
-
     const formData = {
       gender,
       firstName,
@@ -208,8 +208,6 @@ function RegisterWorkerForm() {
       age,
       idNumber,
       nation,
-      position,
-      silicaDust,
       workingHours,
       workingWeeks,
       workingYears,
@@ -219,11 +217,35 @@ function RegisterWorkerForm() {
       bodyHeight,
       bmi,
       underlyingDiseases,
-      riskScore,
-      riskLevel,
+      riskData: [
+        {
+          position,
+          silicaDust,
+          riskScore,
+          riskLevel,
+        },
+      ],
     };
 
-    console.log("Form Data:", formData);
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/workers",
+        formData
+      );
+      console.log("Worker created successfully:", response.data);
+      navigate("/risk-result");
+    } catch (error) {
+      if (error.response) {
+        // Server responded with a status other than 2xx
+        console.error("Error response:", error.response.data);
+      } else if (error.request) {
+        // No response was received
+        console.error("Error request:", error.request);
+      } else {
+        // Something else happened in setting up the request
+        console.error("Error message:", error.message);
+      }
+    }
   };
 
   return (
