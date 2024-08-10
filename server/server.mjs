@@ -1,8 +1,9 @@
-import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 import workerRouter from "./routes/workerRouter.mjs";
 import riskRouter from "./routes/riskRouter.mjs";
+import { swaggerSpec, swaggerUi } from "./config/swagger.mjs";
 
 dotenv.config();
 
@@ -26,18 +27,8 @@ mongoose
     process.exit(1);
   });
 
-// Event listeners for connection status
-mongoose.connection.on("connected", () => {
-  console.log("Mongoose connected to DB");
-});
-
-mongoose.connection.on("error", (err) => {
-  console.error("Mongoose connection error:", err);
-});
-
-mongoose.connection.on("disconnected", () => {
-  console.log("Mongoose disconnected");
-});
+// Swagger setup
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 app.use("/api/workers", workerRouter);
