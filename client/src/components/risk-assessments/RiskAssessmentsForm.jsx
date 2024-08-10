@@ -23,8 +23,7 @@ import { diseaseOptions, separationOptions, positionOptions } from "../Option";
 import RiskResult from "./RiskResult";
 import NameFieldsModal from "./NameFieldsModal";
 import { useNavigate } from "react-router-dom";
-
-const API_CREATE_RISK = "http://localhost:5000/api/risk/";
+import CommonButton from "../button/CommonButton";
 
 function RiskAssessmentsForm() {
   const dispatch = useDispatch();
@@ -36,7 +35,7 @@ function RiskAssessmentsForm() {
   const [tabIndex, setTabIndex] = useState(0);
   const [isSubmit, setIsSubmit] = useState(false);
 
-  // risk assessments
+  // tab risk assessments
   const [position, setPosition] = useState(0);
   const [silicaDust, setSilicaDust] = useState();
   const [workingHours, setWorkingHours] = useState();
@@ -44,7 +43,7 @@ function RiskAssessmentsForm() {
   const [residenceSeparation, setResidenceSeparation] = useState(0);
   const [invalidData, setInvalidData] = useState(false);
 
-  // save risk data
+  // tab save risk data
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isNameFieldsModalOpen, setIsNameFieldsModalOpen] = useState(false);
@@ -72,10 +71,10 @@ function RiskAssessmentsForm() {
         setPosition(value);
         break;
       case "silicaDust":
-        setSilicaDust(value);
+        setSilicaDust(Number(value));
         break;
       case "workingHours":
-        setWorkingHours(value);
+        setWorkingHours(Number(value));
         break;
       case "underlyingDiseases":
         setUnderlyingDiseases(value);
@@ -96,7 +95,10 @@ function RiskAssessmentsForm() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    setIsSubmit(true);
     setInvalidData(true);
+
     if (canSubmit()) {
       dispatch(setRiskLevel({ name: "position", value: position }));
       dispatch(setRiskLevel({ name: "silicaDust", value: silicaDust }));
@@ -111,6 +113,7 @@ function RiskAssessmentsForm() {
         })
       );
       dispatch(calculateRiskLevel());
+      setIsSubmit(false);
       setTabIndex(1);
     }
   };
@@ -142,31 +145,35 @@ function RiskAssessmentsForm() {
     );
   };
 
-  const handlePostRisk = async () => {
-    const data = {
-      position,
-      silicaDust,
-      workingHours,
-      underlyingDiseases,
-      residenceSeparation,
-      riskScore,
-      riskLevel,
-      firstName,
-      lastName,
-    };
-
+  const handleSaveRisk = async () => {
     setIsSubmit(true);
 
+    const data = {
+      firstName,
+      lastName,
+      underlyingDiseases,
+      residenceSeparation,
+      riskData: [
+        {
+          position,
+          silicaDust,
+          workingHours,
+          riskScore,
+          riskLevel,
+          assessedAt: new Date(),
+        },
+      ],
+    };
+
     try {
-      const response = await axios.post(API_CREATE_RISK, data);
-      setIsNameFieldsModalOpen(false);
-      setIsNameNotFound(false);
-      handleReset();
-      navigate("/");
-    } catch {
+      const response = await axios.put("http://localhost:5000/api/risk", data);
+      console.log("Worker updated successfully:", response.data);
+      setIsSubmit(false);
+    } catch (error) {
+      console.error("Error updating worker and adding risk data:", error);
       setIsNameNotFound(true);
+      setIsSubmit(false);
     }
-    setIsSubmit(false);
   };
 
   const closeNameFieldsModal = () => {
@@ -174,6 +181,7 @@ function RiskAssessmentsForm() {
     setFirstName("");
     setLastName("");
     setIsNameNotFound(false);
+    setIsSubmit(false);
   };
 
   return (
@@ -298,20 +306,22 @@ function RiskAssessmentsForm() {
                   )}
                 </FormControl>
 
-                <button
+                <CommonButton
                   type="submit"
-                  className={`bg-success mt-4 text-success-content px-4 py-2 rounded hover:bg-success-light disabled:bg-gray-300`}
+                  style="success"
                   disabled={!canSubmit()}
-                >
-                  ประเมินความเสี่ยงโรคปอดฝุ่นหินทราย
-                </button>
-                <button
+                  text={
+                    !isSubmit
+                      ? "ประเมินความเสี่ยงโรคปอดฝุ่นหินทราย"
+                      : "กำลังประมวลผล..."
+                  }
+                />
+                <CommonButton
                   type="button"
                   onClick={handleReset}
-                  className="bg-info text-info-content px-4 py-2 rounded hover:bg-info-light"
-                >
-                  ล้างข้อมูล
-                </button>
+                  style="accent"
+                  text="ล้างข้อมูล"
+                />
               </Stack>
             </form>
           </TabPanel>
@@ -319,20 +329,18 @@ function RiskAssessmentsForm() {
           <TabPanel>
             <RiskResult />
             <div className="mt-4 flex justify-between">
-              <button
+              <CommonButton
                 type="button"
                 onClick={handleReset}
-                className="bg-info text-info-content px-4 py-2 rounded hover:bg-info-light"
-              >
-                ประเมินอีกครั้ง
-              </button>
-              <button
+                style="info"
+                text="ประเมินอีกครั้ง"
+              />
+              <CommonButton
                 type="button"
                 onClick={toggleNameModals}
-                className="bg-success text-success-content px-4 py-2 rounded hover:bg-success-light"
-              >
-                บันทึกผลการประเมิน
-              </button>
+                style="success"
+                text="บันทึกผลการประเมิน"
+              />
             </div>
           </TabPanel>
         </TabPanels>
@@ -342,7 +350,7 @@ function RiskAssessmentsForm() {
       <NameFieldsModal
         isOpen={isNameFieldsModalOpen}
         onClose={closeNameFieldsModal}
-        onConfirm={handlePostRisk}
+        onConfirm={handleSaveRisk}
         firstName={firstName}
         lastName={lastName}
         onChange={handleChange}

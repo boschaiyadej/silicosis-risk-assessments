@@ -11,6 +11,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import CommonButton from "../button/CommonButton";
 
 const NameFieldsModal = ({
   isOpen,
@@ -66,32 +67,27 @@ const NameFieldsModal = ({
           <div className="mt-4 flex gap-3">
             {isNameNotFound && (
               <Link to="/register-worker">
-                <button
+                <CommonButton
                   type="button"
-                  className="bg-secondary text-secondary-content px-4 py-2 rounded hover:bg-secondary-light"
-                >
-                  ลงทะเบียน
-                </button>
+                  style="secondary"
+                  text="ลงทะเบียน"
+                />
               </Link>
             )}
 
-            <button
+            <CommonButton
               type="button"
               onClick={onConfirm}
+              style="success"
               disabled={!canSubmit()}
-              className={`${
-                !isSubmit ? "bg-success" : "bg-gray-300"
-              } text-success-content px-4 py-2 rounded hover:bg-success-light disabled:bg-gray-300`}
-            >
-              {!isSubmit ? "บันทึกผล" : "กำลังบันทึกผล..."}
-            </button>
-            <button
+              text={!isSubmit ? "บันทึกผล" : "กำลังบันทึกผล..."}
+            />
+            <CommonButton
               type="button"
               onClick={onClose}
-              className="bg-error text-error-content px-4 py-2 rounded hover:bg-error-light"
-            >
-              ยกเลิก
-            </button>
+              style="error"
+              text="ยกเลิก"
+            />
           </div>
         </ModalFooter>
       </ModalContent>

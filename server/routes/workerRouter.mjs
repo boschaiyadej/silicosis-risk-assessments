@@ -76,21 +76,21 @@ const router = express.Router();
  *         lastName: Doe
  *         age: 30
  *         idNumber: "123456789"
- *         nation: USA
- *         workingHours: 40
- *         workingWeeks: 50
+ *         nation: "เมียนมาร์"
+ *         workingHours: 8
+ *         workingWeeks: 7
  *         workingYears: 10
- *         workAddress: "123 Main St, City, Country"
- *         residenceSeparation: married
+ *         workAddress: "นครราชสีมา"
+ *         residenceSeparation: "แยกจากที่พักอาศัย"
  *         bodyWeight: 80
  *         bodyHeight: 175
  *         bmi: 26.1
- *         underlyingDiseases: none
+ *         underlyingDiseases: "ไม่มีโรคประจำตัว"
  *         riskData:
- *           - position: miner
- *             silicaDust: 10
- *             riskScore: 8
- *             riskLevel: 2
+ *           - position: "แกะสลักหิน"
+ *             silicaDust: 0.39
+ *             riskScore: 15
+ *             riskLevel: 4
  */
 
 // POST: Create a new worker with risk data
@@ -99,7 +99,7 @@ const router = express.Router();
  * /api/workers:
  *   post:
  *     summary: Create a new worker
- *     description: Create a new worker with risk data.
+ *     description: Create a new worker with risk data. The combination of `firstName` and `lastName` must be unique.
  *     tags: [Workers]
  *     requestBody:
  *       required: true
@@ -114,6 +114,8 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Worker'
+ *       400:
+ *         description: "Worker with this name already exists"
  *       500:
  *         description: Server error
  */
@@ -138,6 +140,13 @@ router.post("/", async (req, res) => {
   } = req.body;
 
   try {
+    const existingWorker = await Worker.findOne({ firstName, lastName });
+    if (existingWorker) {
+      return res
+        .status(400)
+        .json({ message: "Worker with this name already exists" });
+    }
+
     const newWorker = new Worker({
       gender,
       firstName,
