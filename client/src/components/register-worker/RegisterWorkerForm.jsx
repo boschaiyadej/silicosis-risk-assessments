@@ -28,6 +28,7 @@ import {
   nationOptions,
 } from "../Option";
 import { useNavigate } from "react-router-dom";
+import CommonButton from "../button/CommonButton";
 
 function RegisterWorkerForm() {
   const dispatch = useDispatch();
@@ -44,16 +45,16 @@ function RegisterWorkerForm() {
   const [gender, setGender] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [age, setAge] = useState("");
+  const [age, setAge] = useState(null);
   const [idNumber, setIdNumber] = useState("");
   const [nation, setNation] = useState("");
 
   // tab ข้อมูลการทำงาน
   const [position, setPosition] = useState(0);
   const [silicaDust, setSilicaDust] = useState("");
-  const [workingHours, setWorkingHours] = useState("");
-  const [workingWeeks, setWorkingWeeks] = useState("");
-  const [workingYears, setWorkingYears] = useState("");
+  const [workingHours, setWorkingHours] = useState(null);
+  const [workingWeeks, setWorkingWeeks] = useState(null);
+  const [workingYears, setWorkingYears] = useState(null);
   const [workAddress, setWorkAddress] = useState("");
   const [residenceSeparation, setResidenceSeparation] = useState(0);
 
@@ -83,7 +84,7 @@ function RegisterWorkerForm() {
       const weight = parseFloat(bodyWeight);
       const height = parseFloat(bodyHeight) / 100;
       if (height > 0) {
-        const calculatedBmi = (weight / (height * height)).toFixed(2);
+        const calculatedBmi = (weight / (height * height)).toFixed(0);
         setBmi(calculatedBmi);
       }
     } else {
@@ -92,7 +93,7 @@ function RegisterWorkerForm() {
   }, [bodyWeight, bodyHeight]);
 
   const getBmiCategory = (bmi) => {
-    if (!bmi) return { color: "gray", label: "Not Calculated" };
+    if (!bmi) return { color: "gray", label: "ไม่พบข้อมูล" };
     const bmiValue = parseFloat(bmi);
     if (bmiValue < 18.5)
       return { color: "blue.300", label: "น้ำหนักต่ำกว่าเกณฑ์" };
@@ -165,16 +166,40 @@ function RegisterWorkerForm() {
 
   const canSubmit = () => {
     return (
+      firstName &&
+      lastName &&
+      age > 0 &&
+      nation &&
       position &&
       silicaDust > 0 &&
       workingHours > 0 &&
-      underlyingDiseases &&
-      residenceSeparation
+      workingWeeks > 0 &&
+      workingYears > 0 &&
+      residenceSeparation &&
+      bodyHeight > 0 &&
+      bodyWeight > 0 &&
+      bmi > 0 &&
+      underlyingDiseases
     );
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    dispatch(setRiskLevel({ name: "position", value: position }));
+    dispatch(setRiskLevel({ name: "silicaDust", value: silicaDust }));
+    dispatch(setRiskLevel({ name: "workingHours", value: workingHours }));
+    dispatch(
+      setRiskLevel({ name: "underlyingDiseases", value: underlyingDiseases })
+    );
+    dispatch(
+      setRiskLevel({
+        name: "residenceSeparation",
+        value: residenceSeparation,
+      })
+    );
+    dispatch(calculateRiskLevel());
+
+    navigate("/risk-result");
 
     const formData = {
       gender,
@@ -194,6 +219,8 @@ function RegisterWorkerForm() {
       bodyHeight,
       bmi,
       underlyingDiseases,
+      riskScore,
+      riskLevel,
     };
 
     console.log("Form Data:", formData);
@@ -225,7 +252,7 @@ function RegisterWorkerForm() {
               </FormControl>
 
               <FormControl id="firstName">
-                <FormLabel>ชื่อ</FormLabel>
+                <FormLabel>ชื่อ*</FormLabel>
                 <Input
                   type="text"
                   name="firstName"
@@ -236,7 +263,7 @@ function RegisterWorkerForm() {
               </FormControl>
 
               <FormControl id="lastName">
-                <FormLabel>นามสกุล</FormLabel>
+                <FormLabel>นามสกุล*</FormLabel>
                 <Input
                   type="text"
                   name="lastName"
@@ -247,7 +274,7 @@ function RegisterWorkerForm() {
               </FormControl>
 
               <FormControl id="age">
-                <FormLabel>อายุ</FormLabel>
+                <FormLabel>อายุ*</FormLabel>
                 <InputGroup>
                   <Input
                     type="number"
@@ -274,7 +301,7 @@ function RegisterWorkerForm() {
               </FormControl>
 
               <FormControl id="residence-separation">
-                <FormLabel>สัญชาติ</FormLabel>
+                <FormLabel>สัญชาติ*</FormLabel>
                 <Select name="nation" value={nation} onChange={handleChange}>
                   {nationOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -283,13 +310,12 @@ function RegisterWorkerForm() {
                   ))}
                 </Select>
               </FormControl>
-              <button
-                type="tab"
+              <CommonButton
+                type="button"
+                style="success"
                 onClick={nextTab}
-                className={`bg-primary mt-4 text-primary-content px-4 py-2 rounded hover:bg-primary-light disabled:bg-gray-300`}
-              >
-                ถัดไป
-              </button>
+                text="ถัดไป"
+              />
             </Stack>
           </TabPanel>
 
@@ -297,7 +323,7 @@ function RegisterWorkerForm() {
           <TabPanel>
             <Stack spacing={4}>
               <FormControl id="position">
-                <FormLabel>ตำแหน่งงาน</FormLabel>
+                <FormLabel>ตำแหน่งงาน*</FormLabel>
                 <Select
                   name="position"
                   value={position}
@@ -312,7 +338,7 @@ function RegisterWorkerForm() {
               </FormControl>
 
               <FormControl id="silica-dust">
-                <FormLabel>ความเข้มข้นฝุ่นซิลิกา</FormLabel>
+                <FormLabel>ความเข้มข้นฝุ่นซิลิกา*</FormLabel>
                 <InputGroup>
                   <Input
                     type="number"
@@ -330,7 +356,7 @@ function RegisterWorkerForm() {
               </FormControl>
 
               <FormControl id="working-hours">
-                <FormLabel>ชั่วโมงการทำงานต่อวัน</FormLabel>
+                <FormLabel>ชั่วโมงการทำงานต่อวัน*</FormLabel>
                 <InputGroup>
                   <Input
                     type="number"
@@ -346,7 +372,7 @@ function RegisterWorkerForm() {
                 </InputGroup>
               </FormControl>
               <FormControl id="working-weeks">
-                <FormLabel>วันทำงานต่อสัปดาห์</FormLabel>
+                <FormLabel>วันทำงานต่อสัปดาห์*</FormLabel>
                 <InputGroup>
                   <Input
                     type="number"
@@ -363,7 +389,7 @@ function RegisterWorkerForm() {
               </FormControl>
 
               <FormControl id="working-years">
-                <FormLabel>ประสบการณ์ทำอาชีพแกะสลักหิน</FormLabel>
+                <FormLabel>ประสบการณ์ทำอาชีพแกะสลักหิน*</FormLabel>
                 <InputGroup>
                   <Input
                     type="number"
@@ -386,12 +412,12 @@ function RegisterWorkerForm() {
                   name="workAddress"
                   value={workAddress}
                   onChange={handleChange}
-                  placeholder="กรอกที่อยู่สถานที่ทำงาน"
+                  placeholder="ชื่อที่อยู่สถานที่ทำงาน"
                 />
               </FormControl>
 
               <FormControl id="residence-separation">
-                <FormLabel>ลักษณะสถานที่ทำงาน</FormLabel>
+                <FormLabel>ลักษณะสถานที่ทำงาน*</FormLabel>
                 <Select
                   name="residenceSeparation"
                   value={residenceSeparation}
@@ -406,20 +432,18 @@ function RegisterWorkerForm() {
               </FormControl>
 
               <div className="flex justify-between">
-                <button
-                  type="tab"
+                <CommonButton
+                  type="button"
+                  style="error"
                   onClick={prevTab}
-                  className={`bg-accent mt-4 text-accent-content px-4 py-2 rounded hover:bg-accent-light disabled:bg-gray-300`}
-                >
-                  ย้อนกลับ
-                </button>
-                <button
-                  type="tab"
+                  text="ย้อนกลับ"
+                />
+                <CommonButton
+                  type="button"
+                  style="success"
                   onClick={nextTab}
-                  className={`bg-primary mt-4 text-primary-content px-4 py-2 rounded hover:bg-primary-light disabled:bg-gray-300`}
-                >
-                  ถัดไป
-                </button>
+                  text="ถัดไป"
+                />
               </div>
             </Stack>
           </TabPanel>
@@ -428,14 +452,14 @@ function RegisterWorkerForm() {
           <TabPanel>
             <Stack spacing={4}>
               <FormControl id="body-weight">
-                <FormLabel>น้ำหนัก</FormLabel>
+                <FormLabel>น้ำหนัก*</FormLabel>
                 <InputGroup>
                   <Input
                     type="number"
                     name="bodyWeight"
                     step="1"
                     min="1"
-                    value={bodyWeight}
+                    value={bodyWeight || ""}
                     onChange={handleChange}
                     placeholder="น้ำหนัก"
                   />
@@ -444,7 +468,7 @@ function RegisterWorkerForm() {
               </FormControl>
 
               <FormControl id="body-height">
-                <FormLabel>ส่วนสูง</FormLabel>
+                <FormLabel>ส่วนสูง*</FormLabel>
                 <InputGroup>
                   <Input
                     type="number"
@@ -470,6 +494,11 @@ function RegisterWorkerForm() {
                     value={bmi}
                     onChange={handleChange}
                     placeholder="ดัชนีมวลกาย"
+                    isDisabled
+                    sx={{
+                      color: "black",
+                      cursor: "not-allowed",
+                    }}
                   />
                   <InputRightAddon
                     bg={getBmiCategory(bmi).color}
@@ -481,7 +510,7 @@ function RegisterWorkerForm() {
               </FormControl>
 
               <FormControl id="underlying-diseases">
-                <FormLabel>การมีโรคประจำตัว</FormLabel>
+                <FormLabel>การมีโรคประจำตัว*</FormLabel>
                 <Select
                   name="underlyingDiseases"
                   value={underlyingDiseases}
@@ -495,21 +524,20 @@ function RegisterWorkerForm() {
                 </Select>
               </FormControl>
 
-              <button
-                type="submit"
-                className={`bg-accent text-accent-content px-4 py-2 rounded hover:bg-accent-light disabled:bg-gray-300`}
-              >
-                บันทึกข้อมูลและประเมินความเสี่ยง
-                <br />
-                โรคปอดฝุ่นหินทราย
-              </button>
-              <button
-                type="tab"
-                onClick={prevTab}
-                className={`bg-accent mt-4 text-accent-content px-4 py-2 rounded hover:bg-accent-light disabled:bg-gray-300`}
-              >
-                ย้อนกลับ
-              </button>
+              <div className="flex justify-between">
+                <CommonButton
+                  type="button"
+                  style="error"
+                  onClick={prevTab}
+                  text="ย้อนกลับ"
+                />
+                <CommonButton
+                  type="submit"
+                  style="success"
+                  disabled={!canSubmit()}
+                  text="บันทึกข้อมูล"
+                />
+              </div>
             </Stack>
           </TabPanel>
         </TabPanels>
