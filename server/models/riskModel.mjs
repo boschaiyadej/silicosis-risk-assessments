@@ -5,8 +5,8 @@ const riskDataSchema = new mongoose.Schema(
     position: { type: String, required: true },
     silicaDust: { type: Number, required: true },
     riskScore: { type: Number, required: true },
-    riskLevel: { type: String, required: true },
-    assessedAt: { type: Date, required: true },
+    riskLevel: { type: Number, required: true },
+    assessedAt: { type: Date, default: Date.now },
   },
   { _id: false }
 );
@@ -25,8 +25,8 @@ const workerSchema = new mongoose.Schema({
   residenceSeparation: String,
   bodyWeight: Number,
   bodyHeight: Number,
-  bmi: String,
-  underlyingDiseases: Number,
+  bmi: Number,
+  underlyingDiseases: String,
   riskData: [riskDataSchema],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },

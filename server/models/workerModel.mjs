@@ -35,6 +35,8 @@ const workerSchema = new mongoose.Schema(
   }
 );
 
+workerSchema.index({ firstName: 1, lastName: 1 }, { unique: true });
+
 const Worker = mongoose.model("Worker", workerSchema, "worker_data");
 
 export default Worker;

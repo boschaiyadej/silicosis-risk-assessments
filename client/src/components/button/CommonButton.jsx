@@ -26,7 +26,7 @@ function CommonButton({
   return (
     <button
       type={type}
-      className={`${styles[style]} mt-4 px-4 py-2 rounded`}
+      className={`${styles[style]} mt-2 px-4 py-2 rounded transition-transform duration-200 hover:transform hover:scale-105 focus:transform focus:scale-100`}
       onClick={onClick}
       disabled={disabled}
     >
