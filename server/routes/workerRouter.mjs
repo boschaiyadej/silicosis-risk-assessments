@@ -3,7 +3,7 @@ import Worker from "../models/workerModel.mjs";
 
 const router = express.Router();
 
-// POST: Create a new worker
+// POST: Create a new worker with risk data
 router.post("/", async (req, res) => {
   const {
     gender,
@@ -12,12 +12,16 @@ router.post("/", async (req, res) => {
     age,
     idNumber,
     nation,
+    workingHours,
     workingWeeks,
     workingYears,
     workAddress,
+    residenceSeparation,
     bodyWeight,
     bodyHeight,
     bmi,
+    underlyingDiseases,
+    riskData,
   } = req.body;
 
   try {
@@ -28,19 +32,23 @@ router.post("/", async (req, res) => {
       age,
       idNumber,
       nation,
+      workingHours,
       workingWeeks,
       workingYears,
-      workAddress, // Optional
+      workAddress,
+      residenceSeparation,
       bodyWeight,
       bodyHeight,
       bmi,
+      underlyingDiseases,
+      riskData,
     });
 
     await newWorker.save();
-    res.status(201).send("Worker data saved successfully");
+    res.status(201).json(newWorker); // Return created worker object
   } catch (error) {
-    console.error("Error saving worker data:", error);
-    res.status(500).send("Server error");
+    console.error("Error saving worker and risk data:", error);
+    res.status(500).json({ message: "Server error", error });
   }
 });
 
@@ -51,7 +59,7 @@ router.get("/", async (req, res) => {
     res.status(200).json(workers);
   } catch (error) {
     console.error("Error fetching workers:", error);
-    res.status(500).send("Server error");
+    res.status(500).json({ message: "Server error", error });
   }
 });
 
@@ -60,60 +68,34 @@ router.get("/:id", async (req, res) => {
   try {
     const worker = await Worker.findById(req.params.id);
     if (!worker) {
-      return res.status(404).send("Worker not found");
+      return res.status(404).json({ message: "Worker not found" });
     }
     res.status(200).json(worker);
   } catch (error) {
     console.error("Error fetching worker:", error);
-    res.status(500).send("Server error");
+    res.status(500).json({ message: "Server error", error });
   }
 });
 
-// PUT: Update worker data by ID
+// PUT: Update worker data by ID (partial updates allowed)
 router.put("/:id", async (req, res) => {
-  const {
-    gender,
-    firstName,
-    lastName,
-    age,
-    idNumber,
-    nation,
-    workingWeeks,
-    workingYears,
-    workAddress,
-    bodyWeight,
-    bodyHeight,
-    bmi,
-  } = req.body;
+  const updateFields = req.body;
 
   try {
     const updatedWorker = await Worker.findByIdAndUpdate(
       req.params.id,
-      {
-        gender,
-        firstName,
-        lastName,
-        age,
-        idNumber,
-        nation,
-        workingWeeks,
-        workingYears,
-        workAddress,
-        bodyWeight,
-        bodyHeight,
-        bmi,
-      },
-      { new: true }
+      { $set: updateFields },
+      { new: true, runValidators: true }
     );
 
     if (!updatedWorker) {
-      return res.status(404).send("Worker not found");
+      return res.status(404).json({ message: "Worker not found" });
     }
 
     res.status(200).json(updatedWorker);
   } catch (error) {
-    console.error("Error updating worker data:", error);
-    res.status(500).send("Server error");
+    console.error("Error updating worker and risk data:", error);
+    res.status(500).json({ message: "Server error", error });
   }
 });
 
@@ -123,13 +105,13 @@ router.delete("/:id", async (req, res) => {
     const deletedWorker = await Worker.findByIdAndDelete(req.params.id);
 
     if (!deletedWorker) {
-      return res.status(404).send("Worker not found");
+      return res.status(404).json({ message: "Worker not found" });
     }
 
-    res.status(200).send("Worker data deleted successfully");
+    res.status(200).json({ message: "Worker data deleted successfully" });
   } catch (error) {
     console.error("Error deleting worker data:", error);
-    res.status(500).send("Server error");
+    res.status(500).json({ message: "Server error", error });
   }
 });
 
