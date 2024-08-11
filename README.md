@@ -7,7 +7,6 @@ This web application is designed to assess the risk of silicosis among informal 
 - **Silicosis Risk Calculator:** Evaluate the risk of silicosis based on input parameters.
 - **Worker Register:** Manage and register workers with relevant health and exposure details.
 - **Occupational Health and Sefty Information:** Access guidelines and important information on maintaining occupational health and safety.
-- **Admin Management:** Admin dashboard for managing users, data, and system settings.
 
 ## Authors
 
